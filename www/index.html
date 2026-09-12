@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Color Run — Roll. Match. Survive.</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- SIGN IN -->
+  <section id="signin" class="screen active">
+    <div class="setup">
+      <img class="signin-logo" id="signinLogo" alt="Color Run">
+      <div class="tagline tagline-white">Roll · Match · Survive</div>
+      <div class="panel">
+        <div class="plabel">Sign in</div>
+        <div class="oauth-grid">
+          <button class="oauth-btn google" id="gsiGoogle" type="button"><span class="oauth-ic">G</span> Continue with Google</button>
+          <button class="oauth-btn apple" id="gsiApple" type="button"><span class="oauth-ic"></span> Continue with Apple</button>
+        </div>
+        <div class="divider"><span>or</span></div>
+        <form id="emailForm" class="email-form">
+          <input type="email" id="emailInput" placeholder="Email" required autocomplete="email">
+          <input type="password" id="passInput" placeholder="Password" required autocomplete="current-password" minlength="6">
+          <button type="submit" class="btn-green" id="emailSubmitBtn">Sign in</button>
+          <button type="button" class="btn-link" id="toggleAuthModeBtn">Need an account? Create one</button>
+        </form>
+      </div>
+      <button class="btn-cream" id="gsiGuest" type="button">Continue as Guest</button>
+      <div class="dgl-brand">
+        <img class="dgl-logo" id="signinDgLogo" alt="Data Games Lab">
+        <div class="dgl-name">Data Games Lab LLC</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVATAR CREATION -->
+  <section id="avatar" class="screen">
+    <div class="setup">
+      <img class="logo-cr" id="avatarLogoTop" alt="Color Run">
+      <div class="tagline" style="margin-top:-6px">Create your avatar</div>
+      <div class="panel" style="align-items:center; display:flex; flex-direction:column; gap:14px">
+        <div class="avatar avatar-big" id="avatarPreview">?</div>
+        <div class="plabel" style="margin-bottom:0">Choose an avatar</div>
+        <div class="avatar-presets" id="avatarPresets"></div>
+        <div class="divider"><span>or use your initials</span></div>
+        <div class="swatches" id="avatarSwatches"></div>
+        <input type="text" id="avatarNameInput" placeholder="Display name" maxlength="14" style="width:100%">
+      </div>
+      <button class="btn-green" id="avatarSaveBtn">Save &amp; Continue</button>
+      <img class="dgl-logo-static" id="avatarLogoBottom" alt="Data Games Lab">
+    </div>
+  </section>
+
+  <!-- MAIN MENU -->
+  <section id="mainmenu" class="screen">
+    <div class="setup">
+      <div class="header" style="border-radius:14px">
+        <div class="who">
+          <div class="avatar" id="mmAvatar">?</div>
+          <div class="who-text">
+            <div class="name" id="mmUserName">Player</div>
+            <div class="lvl" id="mmCoinBalance">🪙 0</div>
+          </div>
+        </div>
+        <div class="right">
+          <button class="menu-btn" id="mmSignOutBtn" aria-label="Sign out" type="button">⎋</button>
+        </div>
+      </div>
+      <img class="logo-cr" id="mmLogoCR" alt="Color Run">
+      <div class="mm-copyright" id="mmCopyright"></div>
+      <button class="mode-card" id="mmShopBtn" type="button">
+        <div class="mc-title">🛍️ Shop</div>
+        <div class="mc-sub">New dice skins and avatars</div>
+      </button>
+      <button class="mode-card" id="mmGameBtn" type="button">
+        <div class="mc-title"><img class="mc-icon" id="mmGameIcon" alt=""> Game</div>
+        <div class="mc-sub">User vs CPU, Multiplayer, Challenge &amp; Scoreboard</div>
+      </button>
+      <button class="mode-card" id="mmTournamentBtn" type="button">
+        <div class="mc-title">🏆 Tournament</div>
+        <div class="mc-sub">Bracket play — coming soon</div>
+      </button>
+      <div class="dgl-brand dgl-brand-lg">
+        <img class="dgl-logo" id="mmDgLogo" alt="Data Games Lab">
+        <div class="dgl-name">© Data Games Lab LLC™</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section id="shop" class="screen">
+    <div class="setup">
+      <div class="header" style="border-radius:14px">
+        <div class="who">
+          <div class="name">Shop</div>
+          <div class="lvl" id="shopCoinBalance">🪙 0</div>
+        </div>
+        <div class="right">
+          <button class="menu-btn" id="shopBackBtn" aria-label="Back" type="button">←</button>
+        </div>
+      </div>
+      <img class="shop-logo" src="media/shop-logo.png" alt="Color Run Shop">
+      <button class="btn-green" id="shopBuyCoinsBtn" type="button">🪙 Buy Coins</button>
+      <div class="panel">
+        <div class="plabel">Dice Half-Sets</div>
+        <div class="desc" style="margin-bottom:10px">Every game uses 2 colors (6 dice each) — buy a color to add it to your pair.</div>
+        <div class="shop-warning" id="shopDiceWarning">⚠️ You must have two dice colors selected, or a Premium/Platinum set equipped.</div>
+        <div class="names" id="shopDiceList"></div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Backgrounds</div>
+        <div class="desc" style="margin-bottom:10px">Swap out the wood grain behind the whole game.</div>
+        <div class="names" id="shopBgList"></div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Premium Sets</div>
+        <div class="desc">Coming soon — a full 12-dice set used together, 🪙 150.</div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Platinum Sets</div>
+        <div class="desc">Coming soon — animated 12-dice sets, 🪙 300.</div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Avatars</div>
+        <div class="desc">More avatar packs are coming soon.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODE SELECT -->
+  <section id="modeselect" class="screen">
+    <div class="setup">
+      <div class="header" style="border-radius:14px">
+        <div class="who">
+          <div class="avatar" id="msAvatar">?</div>
+          <div class="who-text">
+            <div class="name" id="msUserName">Player</div>
+            <div class="lvl" id="msCoinBalance">🪙 0</div>
+          </div>
+        </div>
+        <div class="right">
+          <button class="menu-btn" id="msSignOutBtn" aria-label="Sign out" type="button">⎋</button>
+        </div>
+      </div>
+      <img class="logo-cr" id="msLogoCR" alt="Color Run">
+      <div class="section-headline">Pick Your Game Mode</div>
+      <button class="mode-card" id="modeSingle" type="button">
+        <div class="mc-title">User vs CPU Players</div>
+        <div class="mc-sub">Beat your computer opponents to earn coins.</div>
+      </button>
+      <button class="mode-card" id="modeMulti" type="button">
+        <div class="mc-title">Multiplayers Online</div>
+        <div class="mc-sub">Coming soon.</div>
+      </button>
+      <button class="mode-card" id="modeChallenge" type="button">
+        <div class="mc-title">Challenge</div>
+        <div class="mc-sub">Play against others on one device.</div>
+      </button>
+      <button class="mode-card" id="modeScoreboard" type="button">
+        <div class="mc-title">Scoreboard Mode</div>
+        <div class="mc-sub">Track your home game.</div>
+      </button>
+      <button class="btn-link" id="modeStatsBtn" type="button" style="display:none">My Stats</button>
+      <button class="btn-link" id="modeAdFreeBtn" type="button">Go Ad-Free — $2.99/mo or $12/yr</button>
+      <button class="btn-link" id="msBackBtn" type="button">← Main Menu</button>
+    </div>
+  </section>
+
+  <!-- PICK YOUR GAME (User vs CPU buy-in picker) -->
+  <section id="pickgame" class="screen">
+    <div class="setup">
+      <div class="header" style="border-radius:14px">
+        <div class="who">
+          <div class="avatar" id="pgAvatar">?</div>
+          <div class="who-text">
+            <div class="name" id="pgUserName">Player</div>
+            <div class="lvl" id="pgCoinBalance">🪙 0</div>
+          </div>
+        </div>
+        <div class="right">
+          <button class="menu-btn" id="pgBackBtn" aria-label="Back" type="button">←</button>
+        </div>
+      </div>
+      <img class="logo-cr" id="pickGameLogo" alt="Color Run">
+      <div class="section-headline">Pick Your Game</div>
+      <div class="panel">
+        <div class="plabel">Standard</div>
+        <div class="pick-grid" id="pickStandardGrid"></div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Double Action</div>
+        <div class="desc" style="margin-bottom:10px">Double the buy-in, double the payouts.</div>
+        <div class="pick-grid" id="pickDoubleGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCOREBOARD: CODE REDEMPTION -->
+  <section id="scoreboard-code" class="screen">
+    <div class="setup">
+      <div class="tagline" style="margin-top:10px">Scoreboard Mode</div>
+      <div class="panel">
+        <div class="plabel">Enter your code</div>
+        <div class="desc" style="margin-bottom:10px">Find this code on the inside of your Color Run box lid.</div>
+        <input type="text" id="scoreCodeInput" placeholder="e.g. CR-XXXX-XXXX" style="width:100%; text-transform:uppercase">
+      </div>
+      <button class="btn-green" id="scoreCodeSubmit" type="button">Redeem</button>
+      <button class="btn-link" id="scoreCodeBack" type="button">Back</button>
+    </div>
+  </section>
+
+  <!-- SCOREBOARD: HOME (session list) -->
+  <section id="scoreboard-home" class="screen">
+    <div class="setup">
+      <div class="tagline" style="margin-top:10px">Scoreboard Mode</div>
+      <div class="panel">
+        <div class="plabel">Past games</div>
+        <div class="names" id="sbSessionList"></div>
+      </div>
+      <button class="btn-green" id="sbNewGameBtn" type="button">New Home Game</button>
+      <button class="btn-link" id="sbBackBtn" type="button">Back to modes</button>
+    </div>
+  </section>
+
+  <!-- SCOREBOARD: NEW GAME SETUP -->
+  <section id="scoreboard-setup" class="screen">
+    <div class="setup">
+      <div class="tagline" style="margin-top:10px">New Home Game</div>
+      <div class="panel">
+        <div class="plabel">Players</div>
+        <div class="stepper">
+          <button class="rnd" id="sbPMinus" type="button">–</button>
+          <div class="val" id="sbPCount">4</div>
+          <button class="rnd" id="sbPPlus" type="button">+</button>
+        </div>
+        <div class="names" id="sbNameList"></div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Elimination starts at</div>
+        <div class="seg" id="sbThreshSeg">
+          <button data-tier="speed" type="button">Speed<span class="sub" id="sbThSpeedLbl">150 pts</span></button>
+          <button data-tier="standard" class="on" type="button">Standard<span class="sub" id="sbThStdLbl">250 pts</span></button>
+          <button data-tier="custom" id="sbThreshCustomBtn" type="button">Custom<span class="sub" id="sbThreshCustomLbl">Set…</span></button>
+        </div>
+      </div>
+      <button class="btn-green" id="sbStartBtn" type="button">Start Scoring</button>
+      <button class="btn-link" id="sbSetupBackBtn" type="button">Back</button>
+    </div>
+  </section>
+
+  <!-- SCOREBOARD: LIVE SESSION -->
+  <section id="scoreboard-session" class="screen">
+    <div class="header">
+      <div class="who">
+        <div class="name">Scoreboard</div>
+        <div class="lvl" id="sbRoundLbl">Round 1</div>
+      </div>
+      <div class="right">
+        <button class="menu-btn" id="sbEndGameBtn" aria-label="End game" type="button">✕</button>
+      </div>
+    </div>
+    <div class="playscroll">
+      <div class="board" style="margin:12px 12px 0">
+        <div class="board-head"><span class="saved-title">Players</span></div>
+        <div class="names" id="sbPlayerList"></div>
+      </div>
+      <div class="actions">
+        <button class="btn-green" id="sbNextRoundBtn" type="button">Next Round</button>
+      </div>
+      <div class="board" style="margin:0 12px 16px" id="sbEntryBoard">
+        <div class="board-head">
+          <span class="saved-title">Saved Dice</span>
+          <span class="pp-title" id="sbEntryWho">—</span>
+        </div>
+        <div class="saved-grid" id="sbSavedGrid"></div>
+      </div>
+      <div class="actions">
+        <button class="btn-green" id="sbScoreBtn" type="button">Score it!</button>
+        <button class="btn-cream" id="sbUndoBtn" type="button">Undo</button>
+        <button class="info-btn" id="sbInfoBtn" type="button" aria-label="How to play">INFO</button>
+      </div>
+    </div>
+    <div class="rollarea" id="sbRollArea">
+      <div class="sb-keypad" id="sbKeypad"></div>
+    </div>
+  </section>
+
+  <!-- SCOREBOARD: WINNER -->
+  <section id="scoreboard-winner" class="screen">
+    <div class="win">
+      <div class="win-card">
+        <div class="crown">👑</div>
+        <div class="pre">Last one standing</div>
+        <div class="who" id="sbWinName">Player</div>
+        <div class="sc" id="sbWinScore">—</div>
+      </div>
+      <button class="btn-green" id="sbWinDoneBtn" type="button">Done</button>
+    </div>
+  </section>
+
+  <!-- SETUP -->
+  <section id="setup" class="screen">
+    <div class="setup">
+      <div class="header" style="border-radius:14px">
+        <div class="who">
+          <div class="avatar" id="setupAvatar">?</div>
+          <div class="who-text">
+            <div class="name" id="setupUserName">Player</div>
+            <div class="lvl" id="setupCoinBalance">🪙 0</div>
+          </div>
+        </div>
+        <div class="right">
+          <button class="menu-btn" id="setupBackBtn" aria-label="Back" type="button">←</button>
+        </div>
+      </div>
+      <img class="logo-cr" id="setupLogo" alt="Color Run">
+      <div class="tagline tagline-white">Roll · Match · Survive</div>
+      <div class="panel">
+        <div class="plabel">Players</div>
+        <div class="stepper">
+          <button class="rnd" id="pMinus">–</button>
+          <div class="val" id="pCount">4</div>
+          <button class="rnd" id="pPlus">+</button>
+        </div>
+        <div class="names" id="nameList"></div>
+      </div>
+      <div class="panel">
+        <div class="plabel">Elimination starts at</div>
+        <div class="seg" id="threshSeg">
+          <button data-tier="speed">Speed<span class="sub" id="thSpeedLbl">150 pts</span></button>
+          <button data-tier="standard" class="on">Standard<span class="sub" id="thStdLbl">250 pts</span></button>
+          <button data-tier="custom" id="threshCustomBtn">Custom<span class="sub" id="threshCustomLbl">Set…</span></button>
+        </div>
+      </div>
+      <button class="btn-green" id="startBtn">Start Game</button>
+      <button class="btn-link" id="rulesBtnSetup">How to play</button>
+      <div class="credit">Data Games Lab LLC · Pass-and-play on one device</div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play" class="screen">
+    <div class="header">
+      <div class="who">
+        <div class="avatar" id="hAvatar">P1</div>
+        <div class="who-text">
+          <div class="name" id="hName">Player</div>
+          <div class="lvl" id="hCoinBalance">🪙 0</div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">≡</button>
+      </div>
+    </div>
+    <div class="playscroll">
+      <div class="logostrip">
+        <img class="cr" id="playLogoCR" alt="Color Run">
+        <img class="dg" id="playLogoDG" alt="Data Games Lab">
+      </div>
+      <div class="round-banner" id="roundBanner">Round 1</div>
+      <div class="cards" id="cards"></div>
+      <div class="cards-scroll" id="cardsScroll"><div class="cards-thumb" id="cardsThumb"></div></div>
+      <div class="board">
+        <div class="board-head">
+          <span class="saved-title">Saved Dice</span>
+          <span class="pp-title">Points</span>
+        </div>
+        <div class="saved-wrap">
+          <div class="saved-grid" id="savedGrid"></div>
+          <div class="points-box" id="pointsBox"></div>
+        </div>
+      </div>
+    </div>
+    <div class="rollarea" id="rollArea">
+      <div class="dice-grid" id="rollGrid"></div>
+      <div class="roll-hint" id="rollHint">
+        <div class="big" id="rollHintBig">Tap ROLL to start</div>
+        <div class="sm" id="rollHintSm">Roll all 12 dice</div>
+      </div>
+      <div class="spectator-overlay" id="spectatorOverlay">
+        <div class="spectator-choice" id="spectatorChoice">
+          <div class="sp-msg">You're out — the CPUs are still playing</div>
+          <button class="btn-green" id="showFinalScoreBtn" type="button">Show Final Score</button>
+          <button class="btn-cream" id="letPlayersFinishBtn" type="button">Let Players Finish</button>
+        </div>
+        <div class="spectator-ff" id="spectatorFF">
+          <div class="sand-timer">⏳</div>
+          <div class="ff-label">Simulating the rest of the game…</div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-green" id="rollBtn">Roll</button>
+      <button class="btn-cream" id="scoreBtn" disabled>Score it!</button>
+      <button class="info-btn" id="infoBtn" type="button" aria-label="How to play">INFO</button>
+    </div>
+    <div class="keep-tip" id="keepTip"></div>
+    <div class="ad-banner" id="adBanner">
+      <span class="ad-label">Ad</span>
+      <span class="ad-cta" id="adBannerCta">Go ad-free for $2.99/mo</span>
+    </div>
+  </section>
+
+  <!-- WINNER -->
+  <section id="winner" class="screen">
+    <div class="header" style="border-radius:14px">
+      <div class="who">
+        <div class="avatar" id="winHdrAvatar">?</div>
+        <div class="who-text">
+          <div class="name" id="winHdrUserName">Player</div>
+          <div class="lvl" id="winHdrCoinBalance">🪙 0</div>
+        </div>
+      </div>
+      <div class="right">
+        <button class="menu-btn" id="winMenuBackBtn" aria-label="Main Menu" type="button">←</button>
+      </div>
+    </div>
+    <div class="win">
+      <img class="logo-cr" id="winLogo" alt="Color Run">
+      <div class="win-card">
+        <div class="crown">👑</div>
+        <div class="pre">Last one standing</div>
+        <div class="who" id="winName">Player</div>
+        <div class="sc" id="winScore">—</div>
+        <div class="win-coin-section" id="winCoinSection">
+          <div class="win-coinlist" id="winCoinList"></div>
+        </div>
+      </div>
+      <button class="btn-green" id="playAgainBtn">Play again</button>
+      <button class="btn-link" id="finalScoreBtn" style="margin-top:12px">Final standings</button>
+      <button class="btn-link" id="winMainMenuBtn" type="button">← Main Menu</button>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="js/assets.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ads.js"></script>
+<script src="js/iap.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/coins.js"></script>
+<script src="js/avatar-presets.js"></script>
+<script src="js/avatar.js"></script>
+<script src="js/mainmenu.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/modeselect.js"></script>
+<script src="js/pickgame.js"></script>
+<script src="js/scoreboard.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
